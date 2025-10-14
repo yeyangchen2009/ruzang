@@ -25,6 +25,8 @@ const path = require('path');
 const config = {
   // 要忽略的文件名列表
   ignoreFiles: ['_sidebar.md', 'README.md', '_navbar.md', '_coverpage.md'],
+  // 要忽略的目录名列表
+  ignoreDirs: ['.git', 'node_modules', '.vscode', '.idea', 'dist', 'build','_media','js','lib'],
   // 指定的路径名称（可以通过命令行参数传入）
   specifiedPath: process.argv[3] || '佛藏',
   // 缩进字符
@@ -173,6 +175,10 @@ function getDirectoryStructure(dir, depth = 0) {
     const stat = fs.statSync(fullPath);
     
     if (stat && stat.isDirectory()) {
+      // 检查目录是否在忽略列表中
+      if (config.ignoreDirs.includes(file)) {
+        return;
+      }
       directories.push(file);
     } else if (path.extname(file) === '.md') {
       files.push(file);
